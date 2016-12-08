@@ -1,6 +1,6 @@
 //connect the client to the server
 import io from 'socket.io-client';
-var socket = io("http://powerful-gorge-82249.herokuapp.com/", {
+var socket = io("http://52.90.52.220:8080", {
     reconnectionDelay: 0,
     reconnectionDelayMax: 0,
     randomizationFactor: 0,
@@ -14,6 +14,18 @@ socket.on('newUser', function(user, roomID) {
     $('div#joinForm').remove();
     $('div#chatBox').append('<p class="important">New user ' + user + ' has joined room ' + roomID + '</p>');
 
+    //when a new user joins, update the list of users currently in the room
+    socket.on('updateUsers', function(list) {
+        $('div#userList').empty();
+        $('div#userList').append('<p>Users:</p>')
+        $.each(list, function(key, value) {
+            $('div#userList').append('<p class="important">' + value + '</p>');
+        });
+    });
+
+    socket.on('userDisconnected', function(username) {
+        $('div#chatBox').append('<p class="important">User ' + username + ' has disconnected </p>');
+    });
 });
 
 //when a new message is recieved from the server, display it with
@@ -23,19 +35,6 @@ socket.on('recieveMessage', function(msg, user) {
     $('div#chatBox').animate({
         scrollTop: $('div#chatBox').height()
     }, 1000);
-});
-
-//when a new user joins, update the list of users currently in the room
-socket.on('updateUsers', function(list) {
-    $('div#userList').empty();
-    $('div#userList').append('<p>Users:</p>')
-    $.each(list, function(key, value) {
-        $('div#userList').append('<p class="important">' + value + '</p>');
-    });
-});
-
-socket.on('userDisconnected', function(username) {
-    $('div#chatBox').append('<p class="important">User ' + username + ' has disconnected </p>');
 });
 
 //submit the form to join a room
