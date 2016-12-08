@@ -1,0 +1,15 @@
+{
+  "name": "whistler-electron",
+  "productName" : "Whistler",
+  "version": "1.0.0",
+  "description": "electron version of the whistler client",
+  "main": "main.js",
+  "scripts": {
+    "test": "electron ."
+  },
+  "author": "Tj Tracy",
+  "license": "ISC",
+  "dependencies": {
+    "electron": "^1.4.11"
+  }
+}
